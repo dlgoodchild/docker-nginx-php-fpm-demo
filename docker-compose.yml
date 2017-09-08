@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+
+  php7:
+    image: "php:7.1.9-fpm-alpine"
+    container_name: "demo-php7"
+    env_file:
+      - "./.env"
+    ports:
+      - "9000:9000"
+    volumes:
+      - "./src:/var/www/html"
+
+  nginx:
+    build:
+      context: "./nginx"
+    container_name: "demo-nginx"
+    env_file:
+      - "./.env"
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - "php7"
+    volumes:
+      - "./src:/var/www/html"
+      - "./nginx/conf.d:/etc/nginx/conf.d"
+      - "./nginx/ssl:/etc/nginx/ssl"
